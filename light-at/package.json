@@ -1,0 +1,16 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm run -F gui-chat dev",
+    "build": "pnpm run -F gui-chat build",
+    "watch": "pnpm run -F light-at watch",
+    "package": "pnpm run -F light-at vsce:package"
+  },
+  "keywords": [],
+  "author": "himeditator",
+  "license": "MIT",
+  "packageManager": "pnpm@10.7.0"
+}

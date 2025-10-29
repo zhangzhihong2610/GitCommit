@@ -1,0 +1,51 @@
+.dropup-box {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropup-option {
+    width: auto;
+    position: absolute;
+    bottom: 35px;
+    left: 0;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    border-radius: 5px;
+    background-color: var(--vscode-input-background, #ffffff);
+}
+
+.dropup-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    max-height: 295px;
+    max-width: calc(100vw - 40px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.dropup-list li {
+    margin: 0;
+    width: auto;
+    white-space: nowrap;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropup-list li:hover {
+    background-color: rgba(128, 128, 128, 0.15);
+}
+
+.dropup-list li span {
+    border-radius: 5px;
+    padding: 2px 4px;
+    margin-right: 4px;
+}
+
+.dropup-list li sub {
+    padding: 2px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
