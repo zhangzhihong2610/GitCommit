@@ -1,0 +1,63 @@
+.dropup-box {
+    cursor: pointer;
+    position: relative;
+}
+
+.dropup-box:hover {
+    color: var(--vscode-foreground, #616161);
+}
+
+.dropup-box:hover .dropup-option {
+    display: block;
+}
+
+.dropup-option {
+    display: none;
+    width: auto;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    border-radius: 4px;
+    background-color: var(--vscode-sideBar-background, #f2f2f2);
+}
+
+.dropup-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    max-height: 295px;
+    max-width: calc(100vw - 40px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.dropup-list li, .droup-option div {
+    margin: 0;
+    width: auto;
+    white-space: nowrap;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropup-list li span{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropup-list li:hover {
+    background-color: rgba(128, 128, 128, 0.15);
+}
+
+.dropup-list li.selected {
+    color: var(--vscode-list-activeSelectionForeground, #616161);
+    background-color: var(--vscode-list-activeSelectionBackground, #c4d9b1);
+}
+
+.dropup-list li span {
+    margin-left: 2px;
+    margin-right: 8px;
+}

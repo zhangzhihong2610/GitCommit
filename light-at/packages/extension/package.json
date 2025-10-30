@@ -1,0 +1,200 @@
+{
+  "name": "light-at",
+  "displayName": "Light At (Chat with LLMs)",
+  "publisher": "himeditator",
+  "icon": "assets/icons/light-at.png",
+  "description": "Light At is an open-source chat assistant for VS Code, emphasizing the experience of chatting with LLMs within the IDE.",
+  "version": "0.1.9",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiMeditator/light-at"
+  },
+  "homepage": "https://github.com/HiMeditator/light-at",
+  "bugs": {
+    "url": "https://github.com/HiMeditator/light-at/issues"
+  },
+  "qna": "https://github.com/HiMeditator/light-at/issues",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "galleryBanner": {
+    "color": "#1A1A1A",
+    "theme": "dark"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Education",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "copilot",
+    "openai",
+    "ollama",
+    "chat",
+    "LLM"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "light-at",
+          "title": "%plugin.name%",
+          "icon": "assets/icons/light-at-sidebar.png"
+        }
+      ]
+    },
+    "views": {
+      "light-at": [
+        {
+          "type": "webview",
+          "id": "light-at.chat",
+          "name": "%plugin.name%",
+          "icon": "assets/icons/light-at-sidebar.png"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "light-at.goto.settings",
+        "title": "%cmd.goto.settings%",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "light-at.goto.config",
+        "title": "%cmd.goto.config%",
+        "icon": "$(json)"
+      },
+      {
+        "command": "light-at.load.sessions",
+        "title": "%cmd.load.sessions%",
+        "icon": "$(history)"
+      },
+      {
+        "command": "light-at.chat.new",
+        "title": "%cmd.chat.new%",
+        "icon": "$(plus)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "light-at.goto.settings",
+          "when": "view == light-at.chat",
+          "group": "navigation@4"
+        },
+        {
+          "command": "light-at.goto.config",
+          "when": "view == light-at.chat",
+          "group": "navigation@3"
+        },
+        {
+          "command": "light-at.load.sessions",
+          "when": "view == light-at.chat",
+          "group": "navigation@2"
+        },
+        {
+          "command": "light-at.chat.new",
+          "when": "view == light-at.chat",
+          "group": "navigation@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%plugin.name%",
+      "properties": {
+        "lightAt.loadLastChatSession": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%desc.loadLastChatSession%",
+          "order": 0
+        },
+        "lightAt.continuousChat": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%desc.continuousChat%",
+          "order": 1
+        },
+        "lightAt.displayInfoMessage": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%desc.displayInfoMessage%",
+          "order": 2
+        },
+        "lightAt.displayTokensUsage": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%desc.displayTokensUsage%",
+          "order": 3
+        },
+        "lightAt.maxChatHistory": {
+          "type": "number",
+          "default": 128,
+          "minimum": -1,
+          "maximum": 255,
+          "markdownDescription": "%desc.maxChatHistory%",
+          "order": 4
+        },
+        "lightAt.sendRequestShortcut": {
+          "type": "string",
+          "enum": [
+            "Ctrl+Enter",
+            "Enter"
+          ],
+          "default": "Ctrl+Enter",
+          "markdownDescription": "%desc.sendRequestShortcut%",
+          "order": 5
+        },
+        "lightAt.codeHighlightTheme": {
+          "type": "string",
+          "enum": [
+            "github",
+            "arduino-light",
+            "qtcreator-light",
+            "androidstudio",
+            "github-dark",
+            "github-dark-dimmed"
+          ],
+          "default": "github",
+          "markdownDescription": "%desc.codeHighlightTheme%",
+          "order": 6
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "vsce:package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.13.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "nanoid": "^5.1.5",
+    "ollama": "^0.5.14",
+    "openai": "^4.91.1"
+  }
+}
