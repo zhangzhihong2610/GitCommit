@@ -48,25 +48,26 @@ export class RequestHandler {
             case 'context.goto':
                 RequestHandler.contextGoto(message.path);
                 break;
+            case 'ui.error':
+                vscode.window.showErrorMessage(message.message ?? '');
+                break;
             case 'file.upload':
                 RequestHandler.handleFileUpload(message.fileName, message.content, message.fileType);
                 break;
         }
     }
 
-    private static async handleFileUpload(fileName: string, content: string, fileType: string) {
+    private static async handleFileUpload(fileName: string, content: number[] | Uint8Array, fileType: string) {
         try {
-            // 解析日志文件内容
-            const parsedContent = RequestHandler.parseLogFile(content, fileName);
-            
-            // 存储到上下文
-            RequestHandler.repoContext?.addUploadedFile(fileName, parsedContent);
-            
-            // POST到目标接口
-            const uploadResult = await RequestHandler.uploadToServer(fileName, content, fileType);
-            
-            // 通知前端
-            MessageSender.fileUploaded(fileName, parsedContent);
+            const buffer = Buffer.from(content instanceof Uint8Array ? content : new Uint8Array(content));
+            const preview = `File: ${fileName} (binary upload, preview omitted)`;
+            RequestHandler.repoContext?.addUploadedFile(fileName, preview);
+
+            // POST到目标接口 (multipart/form-data)
+            const uploadResult = await RequestHandler.uploadToServer(fileName, buffer, fileType);
+
+            // 通知前端（仅名称与简单提示）
+            MessageSender.fileUploaded(fileName, preview);
             
             if (!uploadResult.success) {
                 vscode.window.showWarningMessage(
@@ -74,6 +75,14 @@ export class RequestHandler {
                 );
             } else {
                 vscode.window.showInformationMessage(`文件 ${fileName} 上传并发送成功`);
+                try{
+                    // 将服务器返回结果转发给聊天模型
+                    const resultText = typeof uploadResult.data === 'string' ? uploadResult.data : JSON.stringify(uploadResult.data);
+                    const snippet = resultText.length > 4000 ? resultText.slice(0, 4000) + '\n...[truncated]' : resultText;
+                    const question = `请基于以下日志上传接口返回的结果进行分析，并指出潜在问题与改进建议：\n\n${snippet}`;
+                    RequestHandler.requestModel?.handleRequest(question, '[]');
+                }
+                catch(e){ /* 忽略转发异常 */ }
             }
         } catch (error: any) {
             vscode.window.showErrorMessage(`文件上传失败: ${error.message}`);
@@ -81,8 +90,8 @@ export class RequestHandler {
     }
 
     private static async uploadToServer(
-        fileName: string, 
-        content: string, 
+        fileName: string,
+        content: Buffer,
         fileType: string
     ): Promise<{success: boolean, data?: any, error?: string}> {
         // 从配置获取目标URL，如果没有则使用默认值
@@ -96,16 +105,24 @@ export class RequestHandler {
             };
         }
 
-        // 准备POST数据
-        const postData = {
-            fileName: fileName,
-            fileType: fileType,
-            content: content,
-            timestamp: new Date().toISOString(),
-            size: content.length
-        };
+        const fields = [
+            { name: 'fileType', value: fileType },
+            { name: 'timestamp', value: new Date().toISOString() }
+        ];
+        const files = [
+            { name: 'file', filename: fileName, contentType: RequestHandler.inferMime(fileType), content }
+        ];
+        return await HttpClient.postMultipart(targetUrl, fields, files);
+    }
 
-        return await HttpClient.post(targetUrl, postData);
+    private static inferMime(ext: string): string {
+        const e = (ext || '').toLowerCase();
+        if(e === 'json') return 'application/json';
+        if(e === 'csv') return 'text/csv';
+        if(e === 'xml') return 'application/xml';
+        if(e === 'yaml' || e === 'yml') return 'application/x-yaml';
+        if(e === 'log' || e === 'txt') return 'text/plain';
+        return 'application/octet-stream';
     }
 
     private static prepareInit(){

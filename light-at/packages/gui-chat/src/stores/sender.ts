@@ -63,12 +63,19 @@ export const useSenderStore = defineStore('sender', () => {
         });
     }
 
-    function fileUpload(fileName: string, content: string, fileType: string){
+    function fileUpload(fileName: string, content: number[] | Uint8Array, fileType: string){
         vscode?.postMessage({
             command: 'file.upload',
             fileName: fileName,
             content: content,
             fileType: fileType
+        });
+    }
+
+    function uiError(message: string){
+        vscode?.postMessage({
+            command: 'ui.error',
+            message: message
         });
     }
 
@@ -83,6 +90,7 @@ export const useSenderStore = defineStore('sender', () => {
         responseStop,
         contextGet,
         contextGoto,
-        fileUpload
+        fileUpload,
+        uiError
     }
 });
