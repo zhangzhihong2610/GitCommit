@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Anomaly Detection</title>
+</head>
+<body>
+    <h1>Upload Log File</h1>
+    <h3>请选择日志类型并上传文件：</h3>
+    <select id='logType'>
+        <option value="BGL">BGL</option>
+        <option value="HDFS">HDFS</option>
+        <option value="Liberty">Liberty</option>
+        <option value="Thunderbird">Thunderbird</option>
+    </select>
+    <input type="file" id="logFile" accept=".csv">
+    <button onclick="uploadLog()">Evaluate</button>
+    <div id="result"></div>
+
+    <script>
+        async function uploadLog() {
+            const fileInput = document.getElementById('logFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a log file first.");
+                return;
+            }
+            const logType = document.getElementById('logType').value;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('logType',logType)
+
+            try {
+                const response = await fetch('http://127.0.0.10:2610/evaluate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                document.getElementById('result').innerHTML = "result: " + result.result + '<br>';
+                document.getElementById('result').innerHTML = "log_content: " + result.log_content + '<br>';
+
+                // 遍历并输出字典内容
+                const resultDiv = document.getElementById('result');
+                // resultDiv.innerHTML = ''; // 清空之前的输出
+
+                // 输出字典内容
+                const anomalyContent = result.anomaly_content; // 假设后端返回的字典字段名为 anomaly_content
+                if (anomalyContent) {
+                    const dictDiv = document.createElement('div');
+                    dictDiv.innerHTML = '<h2>anomaly content Data: </h2>';
+
+                    for (const key in anomalyContent) {
+                        if (anomalyContent.hasOwnProperty(key)) {
+                            const value = anomalyContent[key];
+                            const row_index = value['row_index'];
+                            const anomaly_position = value['anomaly_position'];
+                            const anomalyContentDetail = value['anomaly_content']; // 使用不同的变量名避免冲突
+                            const content_length = value['content_length'];
+                            const item_label_length = value['item_label_length'];
+
+                            const p = document.createElement('p');
+                            p.innerHTML = `${Number(key)+1}. The number of anomaly ${Number(key)+1}: <br>
+                                              row_index: ${row_index} <br>
+                                              anomaly_position: ${anomaly_position} <br>
+                                              anomaly_content: ${anomalyContentDetail} <br>
+                                              content_length: ${content_length} <br>
+                                              item_label_length: ${item_label_length} <br>`;
+                            dictDiv.appendChild(p);
+                        }
+                    }
+                    resultDiv.appendChild(dictDiv);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

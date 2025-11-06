@@ -13,7 +13,13 @@ export interface ModelDialogItem {
     completion_tokens?: number;
 }
 
-export type DialogItem = UserDialogItem | ModelDialogItem;
+export interface AnomalyResultDialogItem {
+    id: string;
+    anomalyContent: Record<string, any> | Array<any>;
+    logContent: any[];
+}
+
+export type DialogItem = UserDialogItem | ModelDialogItem | AnomalyResultDialogItem;
 
 export interface ContextMap {
     [key: string]: {

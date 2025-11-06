@@ -23,10 +23,14 @@
             class="dropup-input-content"
             v-model="search"
             :placeholder="$t('input.searchConext')"
-          />
+          >
         </div>
       </div>
-      <div class="stop-generation" v-show="sendDisable" @click="sendStore.responseStop()">
+      <div 
+        class="stop-generation"
+        v-show="sendDisable"
+        @click="sendStore.responseStop()"
+      >
         <FontAwesomeIcon :icon="faPause" />
         <span>{{ $t('input.stopGeneration') }}</span>
       </div>
@@ -39,16 +43,10 @@
         <span>上传日志</span>
       </div>
     </div>
-
+    
     <!-- 上传模态框 -->
     <Teleport to="body">
-      <div
-        v-if="showUpload"
-        class="upload-overlay"
-        @click="toggleUpload"
-        @dragover.prevent.stop
-        @drop.prevent.stop
-      ></div>
+      <div v-if="showUpload" class="upload-overlay" @click="toggleUpload" @dragover.prevent.stop @drop.prevent.stop></div>
       <div v-if="showUpload" class="upload-modal" @dragover.prevent.stop @drop.prevent.stop>
         <div class="upload-modal-content">
           <div class="upload-modal-header">
@@ -60,50 +58,45 @@
               <span>{{ errorMsg }}</span>
               <button class="error-close" @click="errorMsg = ''">×</button>
             </div>
-            <div
-              class="upload-area"
+            
+            <!-- 文件类型选择器 -->
+            <div class="file-type-selector" style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--vscode-foreground, #333);">选择日志类型：</label>
+              <select v-model="selectedLogType" class="log-type-select">
+                <option value="BGL">BGL</option>
+                <option value="HDFS">HDFS</option>
+                <option value="Liberty">Liberty</option>
+                <option value="Thunderbird">Thunderbird</option>
+              </select>
+            </div>
+
+            <div class="upload-area"
               @click="triggerUpload"
               @drop.prevent.stop="handleDrop"
               @dragover.prevent.stop="onDragOver"
               @dragenter.prevent.stop="onDragEnter"
               @dragleave.prevent.stop="onDragLeave"
             >
-              <input
-                ref="fileInput"
-                type="file"
-                accept=".log,.txt,.json,.csv,.xml,.yaml,.yml"
-                multiple
-                style="display: none"
-                @change="handleFileSelect"
-              />
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                style="width: 48px; height: 48px"
-              >
+              <input ref="fileInput" type="file" accept=".csv" style="display: none" @change="handleFileSelect" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 48px; height: 48px;">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              <p style="font-size: 16px; margin: 10px 0">点击上传日志数据文件到这里</p>
-              <p style="font-size: 13px; color: #666">
-                支持 .log, .txt, .json, .csv, .xml, .yaml, .yml 格式
-              </p>
+              <p style="font-size: 16px; margin: 10px 0;">点击上传CSV日志文件到这里</p>
+              <p style="font-size: 13px; color: #666;">仅支持 .csv 格式</p>
             </div>
-            <div v-if="uploadedFiles.length > 0" class="upload-list">
-              <div class="upload-list-header">
-                <span class="upload-count">已上传 ({{ uploadedFiles.length }})</span>
-                <button class="clear-btn" @click="clearFiles">
-                  {{ $t('upload.clearAll') || '清空' }}
-                </button>
+            <div v-if="uploadedFiles.length > 0" style="margin-top: 20px;">
+              <div class="file-list-header">
+                <span>已上传 ({{ uploadedFiles.length }})</span>
+                <button @click="clearFiles" class="clear-all-btn">清空</button>
               </div>
-              <div v-for="(file, i) in uploadedFiles" :key="i" class="upload-item">
-                <span class="file-name" :title="file.name">{{ file.name }}</span>
-                <button class="remove-btn" @click="removeFile(i)">
-                  {{ $t('upload.remove') || '移除' }}
-                </button>
+              <div v-for="(file, i) in uploadedFiles" :key="i" class="file-item-row">
+                <div class="file-item-info">
+                  <span class="file-name">{{ file.name }}</span>
+                  <span class="file-type-badge">{{ file.logType }}</span>
+                </div>
+                <button @click="removeFile(i)" class="remove-file-btn">移除</button>
               </div>
             </div>
           </div>
@@ -132,7 +125,8 @@ const showUpload = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const errorMsg = ref('')
 const dragDepth = ref(0)
-const uploadedFiles = ref<{ name: string; size: number }[]>([])
+const uploadedFiles = ref<{name: string, size: number, logType: string}[]>([])
+const selectedLogType = ref('BGL')
 const listenerStore = useListenerStore()
 const { sendDisable, contextMap } = storeToRefs(listenerStore)
 const sendStore = useSenderStore()
@@ -167,31 +161,32 @@ function triggerUpload() {
   fileInput.value?.click()
 }
 
-const allowedExt = ['log', 'txt', 'json', 'csv', 'xml', 'yaml', 'yml']
-
-function isAllowed(file: File) {
+function isAllowed(file: File){
   const ext = (file.name.split('.').pop() || '').toLowerCase()
-  return allowedExt.includes(ext)
+  return ext === 'csv'
 }
 
 async function handleFileSelect(e: Event) {
   const files = (e.target as HTMLInputElement).files
   if (!files) return
   for (const file of Array.from(files)) {
-    if (!isAllowed(file)) {
-      errorMsg.value = '仅支持日志类型文件：.log, .txt, .json, .csv, .xml, .yaml, .yml'
-      setTimeout(() => {
-        if (errorMsg.value) errorMsg.value = ''
-      }, 3000)
+    if(!isAllowed(file)){
+      errorMsg.value = '仅支持 CSV 格式文件'
+      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+      continue
+    }
+    if(!selectedLogType.value){
+      errorMsg.value = '请先选择日志类型'
+      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
       continue
     }
     const buffer = await file.arrayBuffer()
     sendStore.fileUpload(
       file.name,
       Array.from(new Uint8Array(buffer)) as unknown as any,
-      (file.name.split('.').pop() || 'txt').toLowerCase(),
+      selectedLogType.value
     )
-    uploadedFiles.value.push({ name: file.name, size: file.size })
+    uploadedFiles.value.push({ name: file.name, size: file.size, logType: selectedLogType.value })
   }
 }
 
@@ -211,39 +206,42 @@ async function handleDrop(e: DragEvent) {
   }
   if (!files.length) return
   for (const file of files) {
-    if (!isAllowed(file)) {
-      errorMsg.value = '仅支持日志类型文件：.log, .txt, .json, .csv, .xml, .yaml, .yml'
-      setTimeout(() => {
-        if (errorMsg.value) errorMsg.value = ''
-      }, 3000)
+    if(!isAllowed(file)){
+      errorMsg.value = '仅支持 CSV 格式文件'
+      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+      continue
+    }
+    if(!selectedLogType.value){
+      errorMsg.value = '请先选择日志类型'
+      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
       continue
     }
     const buffer = await file.arrayBuffer()
     sendStore.fileUpload(
       file.name,
       Array.from(new Uint8Array(buffer)) as unknown as any,
-      (file.name.split('.').pop() || 'txt').toLowerCase(),
+      selectedLogType.value
     )
-    uploadedFiles.value.push({ name: file.name, size: file.size })
+    uploadedFiles.value.push({ name: file.name, size: file.size, logType: selectedLogType.value })
   }
   dragDepth.value = 0
 }
 
-function onDragOver(e: DragEvent) {
+function onDragOver(e: DragEvent){
   if (e.dataTransfer) {
     e.dataTransfer.dropEffect = 'copy'
   }
 }
 
-function onDragEnter() {
+function onDragEnter(){
   dragDepth.value++
 }
 
-function onDragLeave() {
+function onDragLeave(){
   dragDepth.value = Math.max(0, dragDepth.value - 1)
 }
 
-function preventWindowDnD(e: DragEvent) {
+function preventWindowDnD(e: DragEvent){
   // 阻止 VS Code 抢占拖拽，提升 Webview 内部 drop 识别稳定性
   e.preventDefault()
 }
@@ -340,12 +338,8 @@ document.addEventListener('click', (e) => {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* 模态框容器 */
@@ -359,13 +353,13 @@ document.addEventListener('click', (e) => {
 }
 
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -60%); 
   }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, -50%); 
   }
 }
 
@@ -455,6 +449,109 @@ document.addEventListener('click', (e) => {
   background-color: var(--vscode-input-background, #f5f5f5);
 }
 
+.file-type-selector {
+  margin-bottom: 15px;
+}
+
+.log-type-select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  background-color: var(--vscode-input-background, #ffffff);
+  color: var(--vscode-input-foreground, #333);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.log-type-select:focus {
+  outline: none;
+  border-color: var(--vscode-button-hoverBackground, #5a4579);
+}
+
+.file-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin: 8px 0;
+  background: var(--vscode-input-background, #f9f9f9);
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.file-item-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 13px;
+  color: var(--vscode-foreground, #333);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.file-type-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  background-color: var(--vscode-button-background, #4d3473);
+  color: var(--vscode-button-foreground, #ffffff);
+  white-space: nowrap;
+}
+
+.remove-file-btn {
+  padding: 6px 12px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--vscode-foreground, #333);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.remove-file-btn:hover {
+  background-color: #ffebee;
+  border-color: #f44336;
+  color: #f44336;
+}
+
+.file-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vscode-foreground, #333);
+}
+
+.clear-all-btn {
+  padding: 6px 12px;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--vscode-foreground, #333);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background-color: var(--vscode-input-background, #f5f5f5);
+  border-color: var(--vscode-button-hoverBackground, #5a4579);
+}
+
+
 /* .dropup-option {
   box-shadow: 0 0 4px 2px rgba(128, 128, 128, 0.4);
 } */
@@ -472,62 +569,5 @@ document.addEventListener('click', (e) => {
 .selected-context:hover {
   cursor: pointer;
   background-color: rgba(128, 128, 128, 0.2);
-}
-
-/* upload list styles */
-.upload-list {
-  margin-top: 20px;
-}
-.upload-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.upload-count {
-  color: var(--vscode-foreground, #333);
-  font-weight: 500;
-}
-.clear-btn {
-  padding: 4px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  border: 1px solid rgba(128, 128, 128, 0.15);
-  background-color: var(--vscode-button-background, transparent);
-  color: var(--vscode-button-foreground, var(--vscode-foreground, #333));
-}
-.clear-btn:hover {
-  background-color: var(--vscode-button-hoverBackground, rgba(128, 128, 128, 0.12));
-}
-.upload-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  margin: 5px 0;
-  background: var(--vscode-input-background, #f9f9f9);
-  border-radius: 4px;
-  border: 1px solid rgba(128, 128, 128, 0.06);
-}
-.file-name {
-  display: inline-block;
-  flex: 1 1 auto;
-  margin-right: 12px;
-  color: var(--vscode-foreground, #333);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-all;
-}
-.remove-btn {
-  padding: 4px 8px;
-  cursor: pointer;
-  border-radius: 4px;
-  border: 1px solid rgba(128, 128, 128, 0.12);
-  background-color: transparent;
-  color: var(--vscode-foreground, #333);
-}
-.remove-btn:hover {
-  background-color: rgba(128, 128, 128, 0.08);
 }
 </style>

@@ -112,4 +112,13 @@ export class MessageSender{
           content: content
         });
       }
+
+    public static anomalyResult(resultID: string, anomalyContent: any, logContent: any[]) {
+        MessageSender.view?.webview.postMessage({
+          command: 'anomaly.result',
+          resultID: resultID,
+          anomalyContent: anomalyContent,
+          logContent: logContent
+        });
+    }
 }
