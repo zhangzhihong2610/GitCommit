@@ -65,6 +65,9 @@ export const useListenerStore = defineStore('listener', () => {
             case 'file.uploaded':
                 fileUploaded(message.fileName, message.content);
                 break;
+            case 'anomaly.result':
+                anomalyResult(message.resultID, message.anomalyContent, message.logContent);
+                break;
         }
     });
 
@@ -102,7 +105,10 @@ export const useListenerStore = defineStore('listener', () => {
         if(dialogs.value.length && 
             dialogs.value[dialogs.value.length - 1].id === message.requestID
         ){
-            dialogs.value[dialogs.value.length - 1].content += message.data;
+            const lastDialog = dialogs.value[dialogs.value.length - 1];
+            if('content' in lastDialog){
+                lastDialog.content += message.data;
+            }
         }
     }
 
@@ -135,6 +141,14 @@ export const useListenerStore = defineStore('listener', () => {
         console.log('File uploaded:', fileName);
     }
 
+    function anomalyResult(resultID: string, anomalyContent: any, logContent: any[]){
+        dialogs.value.push({
+            id: resultID,
+            anomalyContent: anomalyContent,
+            logContent: logContent
+        });
+    }
+
     return {
         models,
         modelID,
@@ -142,6 +156,7 @@ export const useListenerStore = defineStore('listener', () => {
         dialogs,
         welcomeInfo,
         sendShortcut,
-        contextMap
+        contextMap,
+        anomalyResult
     };
 })
