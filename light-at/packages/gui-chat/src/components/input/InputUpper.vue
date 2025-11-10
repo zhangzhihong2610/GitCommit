@@ -70,7 +70,7 @@
               </select>
             </div>
 
-            <div class="upload-area"
+            <div v-if="!uploadedFile" class="upload-area"
               @click="triggerUpload"
               @drop.prevent.stop="handleDrop"
               @dragover.prevent.stop="onDragOver"
@@ -86,19 +86,23 @@
               <p style="font-size: 16px; margin: 10px 0;">点击上传CSV日志文件到这里</p>
               <p style="font-size: 13px; color: #666;">仅支持 .csv 格式</p>
             </div>
-            <div v-if="uploadedFiles.length > 0" style="margin-top: 20px;">
+            <div v-if="uploadedFile" style="margin-top: 20px;">
               <div class="file-list-header">
-                <span>已上传 ({{ uploadedFiles.length }})</span>
-                <button @click="clearFiles" class="clear-all-btn">清空</button>
+                <span>已上传文件</span>
               </div>
-              <div v-for="(file, i) in uploadedFiles" :key="i" class="file-item-row">
+              <div class="file-item-row">
                 <div class="file-item-info">
-                  <span class="file-name">{{ file.name }}</span>
-                  <span class="file-type-badge">{{ file.logType }}</span>
+                  <span class="file-name">{{ uploadedFile.name }}</span>
+                  <span class="file-type-badge">{{ uploadedFile.logType }}</span>
                 </div>
-                <button @click="removeFile(i)" class="remove-file-btn">移除</button>
               </div>
             </div>
+          </div>
+          <div v-if="uploadedFile" class="upload-modal-footer">
+            <button @click="clearFile" class="remove-file-btn">移除</button>
+            <button @click="sendFile" class="send-file-btn" :disabled="sending">
+              {{ sending ? '发送中...' : '发送' }}
+            </button>
           </div>
         </div>
       </div>
@@ -125,8 +129,9 @@ const showUpload = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const errorMsg = ref('')
 const dragDepth = ref(0)
-const uploadedFiles = ref<{name: string, size: number, logType: string}[]>([])
+const uploadedFile = ref<{name: string, size: number, logType: string, content: Uint8Array} | null>(null)
 const selectedLogType = ref('BGL')
+const sending = ref(false)
 const listenerStore = useListenerStore()
 const { sendDisable, contextMap } = storeToRefs(listenerStore)
 const sendStore = useSenderStore()
@@ -168,25 +173,36 @@ function isAllowed(file: File){
 
 async function handleFileSelect(e: Event) {
   const files = (e.target as HTMLInputElement).files
-  if (!files) return
-  for (const file of Array.from(files)) {
-    if(!isAllowed(file)){
-      errorMsg.value = '仅支持 CSV 格式文件'
-      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
-      continue
-    }
-    if(!selectedLogType.value){
-      errorMsg.value = '请先选择日志类型'
-      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
-      continue
-    }
-    const buffer = await file.arrayBuffer()
-    sendStore.fileUpload(
-      file.name,
-      Array.from(new Uint8Array(buffer)) as unknown as any,
-      selectedLogType.value
-    )
-    uploadedFiles.value.push({ name: file.name, size: file.size, logType: selectedLogType.value })
+  if (!files || files.length === 0) return
+  
+  // 只处理第一个文件
+  const file = files[0]
+  
+  if(!isAllowed(file)){
+    errorMsg.value = '仅支持 CSV 格式文件'
+    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+    return
+  }
+  if(!selectedLogType.value){
+    errorMsg.value = '请先选择日志类型'
+    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+    return
+  }
+  
+  const buffer = await file.arrayBuffer()
+  const content = new Uint8Array(buffer)
+  
+  // 保存文件信息，但不立即发送
+  uploadedFile.value = { 
+    name: file.name, 
+    size: file.size, 
+    logType: selectedLogType.value,
+    content: content
+  }
+  
+  // 清空文件输入
+  if (fileInput.value) {
+    fileInput.value.value = ''
   }
 }
 
@@ -205,25 +221,34 @@ async function handleDrop(e: DragEvent) {
     files.push(...Array.from(dt.files))
   }
   if (!files.length) return
-  for (const file of files) {
-    if(!isAllowed(file)){
-      errorMsg.value = '仅支持 CSV 格式文件'
-      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
-      continue
-    }
-    if(!selectedLogType.value){
-      errorMsg.value = '请先选择日志类型'
-      setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
-      continue
-    }
-    const buffer = await file.arrayBuffer()
-    sendStore.fileUpload(
-      file.name,
-      Array.from(new Uint8Array(buffer)) as unknown as any,
-      selectedLogType.value
-    )
-    uploadedFiles.value.push({ name: file.name, size: file.size, logType: selectedLogType.value })
+  
+  // 只处理第一个文件
+  const file = files[0]
+  
+  if(!isAllowed(file)){
+    errorMsg.value = '仅支持 CSV 格式文件'
+    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+    dragDepth.value = 0
+    return
   }
+  if(!selectedLogType.value){
+    errorMsg.value = '请先选择日志类型'
+    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+    dragDepth.value = 0
+    return
+  }
+  
+  const buffer = await file.arrayBuffer()
+  const content = new Uint8Array(buffer)
+  
+  // 保存文件信息，但不立即发送
+  uploadedFile.value = { 
+    name: file.name, 
+    size: file.size, 
+    logType: selectedLogType.value,
+    content: content
+  }
+  
   dragDepth.value = 0
 }
 
@@ -256,12 +281,31 @@ onUnmounted(() => {
   window.removeEventListener('drop', preventWindowDnD, { capture: true } as any)
 })
 
-function removeFile(i: number) {
-  uploadedFiles.value.splice(i, 1)
+function clearFile() {
+  uploadedFile.value = null
 }
 
-function clearFiles() {
-  uploadedFiles.value = []
+async function sendFile() {
+  if (!uploadedFile.value || sending.value) return
+  
+  sending.value = true
+  try {
+    // 发送文件到后端
+    sendStore.fileUpload(
+      uploadedFile.value.name,
+      Array.from(uploadedFile.value.content) as unknown as any,
+      uploadedFile.value.logType
+    )
+    
+    // 发送成功后清空文件并关闭弹窗
+    uploadedFile.value = null
+    showUpload.value = false
+  } catch (error) {
+    errorMsg.value = '发送失败，请重试'
+    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+  } finally {
+    sending.value = false
+  }
 }
 
 document.addEventListener('click', (e) => {
@@ -411,7 +455,18 @@ document.addEventListener('click', (e) => {
 .upload-modal-body {
   padding: 20px;
   overflow-y: auto;
-  max-height: calc(80vh - 60px);
+  flex: 1;
+  min-height: 0;
+}
+
+.upload-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+  background-color: var(--vscode-sideBar-background, #f3f3f3);
 }
 
 .upload-error {
@@ -547,6 +602,46 @@ document.addEventListener('click', (e) => {
 }
 
 .clear-all-btn:hover {
+  background-color: var(--vscode-input-background, #f5f5f5);
+  border-color: var(--vscode-button-hoverBackground, #5a4579);
+}
+
+.send-file-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--vscode-button-background, #705697);
+  color: var(--vscode-button-foreground, #ffffff);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.send-file-btn:hover:not(:disabled) {
+  background-color: var(--vscode-button-hoverBackground, #5a4579);
+}
+
+.send-file-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-modal-footer .remove-file-btn {
+  padding: 10px 24px;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--vscode-foreground, #333);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.upload-modal-footer .remove-file-btn:hover {
   background-color: var(--vscode-input-background, #f5f5f5);
   border-color: var(--vscode-button-hoverBackground, #5a4579);
 }
