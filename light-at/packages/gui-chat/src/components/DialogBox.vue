@@ -9,6 +9,7 @@
         v-if="'anomalyContent' in dialog" 
         :anomalyContent="dialog.anomalyContent" 
         :logContent="dialog.logContent"
+        :result="dialog.result"
       />
       <ModelDialog v-else-if="'name' in dialog" :dialog="dialog" />
       <UserDialog v-else :dialog="dialog" />

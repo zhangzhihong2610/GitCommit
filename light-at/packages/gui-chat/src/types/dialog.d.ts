@@ -17,6 +17,7 @@ export interface AnomalyResultDialogItem {
     id: string;
     anomalyContent: Record<string, any> | Array<any>;
     logContent: any[];
+    result: any[];
 }
 
 export type DialogItem = UserDialogItem | ModelDialogItem | AnomalyResultDialogItem;

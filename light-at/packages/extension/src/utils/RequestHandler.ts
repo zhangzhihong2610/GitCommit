@@ -92,16 +92,16 @@ export class RequestHandler {
         try {
           // 处理返回数据格式：{"result": result, "anomaly_content": anomaly_content, "log_content":log_content}
           const responseData = uploadResult.data;
-          if (responseData && typeof responseData === 'object') {
+          if (responseData && typeof responseData === "object") {
             const result = responseData.result || [];
             const anomalyContent = responseData.anomaly_content || {};
             const logContent = responseData.log_content || [];
-            
+
             // 格式化anomaly_content为数组格式
             let formattedAnomalies: any[] = [];
             if (Array.isArray(anomalyContent)) {
               formattedAnomalies = anomalyContent;
-            } else if (typeof anomalyContent === 'object') {
+            } else if (typeof anomalyContent === "object") {
               // 如果anomaly_content是对象，转换为数组
               const keys = Object.keys(anomalyContent);
               if (keys.length > 0) {
@@ -114,42 +114,68 @@ export class RequestHandler {
                   }
                   return a.localeCompare(b);
                 });
-                formattedAnomalies = sortedKeys.map(key => anomalyContent[key]).filter(item => item !== null && item !== undefined);
+                formattedAnomalies = sortedKeys
+                  .map((key) => anomalyContent[key])
+                  .filter((item) => item !== null && item !== undefined);
               }
             }
-            
+
             // 发送异常检测结果到前端显示
             const resultID = `anomaly_${Date.now()}`;
-            MessageSender.anomalyResult(resultID, formattedAnomalies, logContent);
-            
+            MessageSender.anomalyResult(
+              resultID,
+              formattedAnomalies,
+              logContent,
+              result
+            );
+
             // 统计异常数量
-            const anomalyCount = Array.isArray(result) ? result.filter((r: any) => r === 1).length : 0;
-            const totalWindows = Array.isArray(result) ? result.length : 0;
-            
+            const anomalyCount = Array.isArray(result)
+              ? result.filter((r: any) => r === 1).length
+              : 0;
+
             // 同时发送给聊天模型进行分析
-            if (anomalyCount > 0) {
-              let analysisSummary = `日志文件分析完成：\n`;
-              analysisSummary += `- 总窗口数：${totalWindows}\n`;
-              analysisSummary += `- 异常窗口数：${anomalyCount}\n`;
-              analysisSummary += `- 正常窗口数：${totalWindows - anomalyCount}\n\n`;
-              analysisSummary += `详细异常检测结果已在上方显示，请查看并分析。`;
-              
-              const question = `请基于日志异常检测结果进行分析，并指出潜在问题与改进建议。检测结果显示：${anomalyCount}个异常窗口，${totalWindows - anomalyCount}个正常窗口。`;
+            if (anomalyCount > 0 && formattedAnomalies.length > 0) {
+              // 收集所有异常内容（从anomaly_content数组中的每个对象的anomaly_content属性提取）
+              const anomalyTexts: string[] = [];
+              formattedAnomalies.forEach((anomaly: any) => {
+                if (typeof anomaly === 'object' && anomaly !== null) {
+                  // 确保从anomaly_content属性中提取文本
+                  const content = anomaly.anomaly_content;
+                  if (content && typeof content === 'string' && content.trim().length > 0) {
+                    anomalyTexts.push(content.trim());
+                  }
+                }
+              });
+
+              // 去重，避免重复的异常内容
+              const uniqueAnomalyTexts = Array.from(new Set(anomalyTexts));
+
+              // 构建问题描述
+              const anomalyList = uniqueAnomalyTexts
+                .map((text: string, index: number) => `${index + 1}. ${text}`)
+                .join('\n');
+
+              const question = `我的日志类型为${logType}，请根据这些错误，按照严重以及需要修复的紧急程度来排序，给我它们的一个最佳解决方案。\n\n检测到的异常内容如下：\n${anomalyList}`;
               RequestHandler.requestModel?.handleRequest(question, "[]");
             }
           } else {
             // 如果返回格式不符合预期，使用原始数据
-            const resultText = typeof uploadResult.data === "string"
-              ? uploadResult.data
-              : JSON.stringify(uploadResult.data);
-            const snippet = resultText.length > 4000
-              ? resultText.slice(0, 4000) + "\n...[truncated]"
-              : resultText;
+            const resultText =
+              typeof uploadResult.data === "string"
+                ? uploadResult.data
+                : JSON.stringify(uploadResult.data);
+            const snippet =
+              resultText.length > 4000
+                ? resultText.slice(0, 4000) + "\n...[truncated]"
+                : resultText;
             const question = `请基于以下日志上传接口返回的结果进行分析：\n\n${snippet}`;
             RequestHandler.requestModel?.handleRequest(question, "[]");
           }
         } catch (e) {
-          vscode.window.showWarningMessage(`处理服务器返回数据时出错: ${(e as Error).message}`);
+          vscode.window.showWarningMessage(
+            `处理服务器返回数据时出错: ${(e as Error).message}`
+          );
         }
       }
     } catch (error: any) {
@@ -162,10 +188,7 @@ export class RequestHandler {
     content: Buffer,
     logType: string
   ): Promise<{ success: boolean; data?: any; error?: string }> {
-    // 从配置获取目标URL，如果没有则使用默认值
-    // 你可以通过 Configuration 来配置这个URL
-    const targetUrl =
-      process.env.LOG_API_URL || "http://localhost:8080/api/logs/upload";
+    const targetUrl = "http://10.34.13.202:2610/evaluate";
 
     if (!HttpClient.isValidUrl(targetUrl)) {
       return {
@@ -175,9 +198,7 @@ export class RequestHandler {
     }
 
     // 只携带两个参数：日志文件本身和日志类型
-    const fields = [
-      { name: "logType", value: logType },
-    ];
+    const fields = [{ name: "logType", value: logType }];
     const files = [
       {
         name: "file",
@@ -246,5 +267,4 @@ export class RequestHandler {
       );
     }
   }
-
 }

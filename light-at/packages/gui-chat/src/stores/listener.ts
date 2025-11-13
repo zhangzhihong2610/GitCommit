@@ -66,7 +66,7 @@ export const useListenerStore = defineStore('listener', () => {
                 fileUploaded(message.fileName, message.content);
                 break;
             case 'anomaly.result':
-                anomalyResult(message.resultID, message.anomalyContent, message.logContent);
+                anomalyResult(message.resultID, message.anomalyContent, message.logContent, message.result);
                 break;
         }
     });
@@ -141,11 +141,12 @@ export const useListenerStore = defineStore('listener', () => {
         console.log('File uploaded:', fileName);
     }
 
-    function anomalyResult(resultID: string, anomalyContent: any, logContent: any[]){
+    function anomalyResult(resultID: string, anomalyContent: any, logContent: any[], result: any[]){
         dialogs.value.push({
             id: resultID,
             anomalyContent: anomalyContent,
-            logContent: logContent
+            logContent: logContent,
+            result: result
         });
     }
 

@@ -10,8 +10,8 @@
         :key="index" 
         class="anomaly-item"
       >
-        <span class="anomaly-index">{{ index + 1 }}.</span>
-        <span class="anomaly-content-text">{{ anomaly.anomaly_content }}</span>
+        <span class="anomaly-index">Line {{ calculateLineNumber(anomaly) }}:</span>
+        <code class="anomaly-content-text">{{ anomaly.anomaly_content }}</code>
       </div>
     </div>
 
@@ -50,9 +50,17 @@ interface AnomalyDetail {
 interface Props {
   anomalyContent: Record<string, any> | AnomalyDetail[]
   logContent: any[]
+  result: any[]
 }
 
 const props = defineProps<Props>()
+
+// 计算Line号：row_index * 100 + anomaly_position
+function calculateLineNumber(anomaly: AnomalyDetail): number {
+  const rowIndex = anomaly.row_index ?? 0
+  const anomalyPosition = anomaly.anomaly_position ?? 0
+  return rowIndex * 100 + anomalyPosition
+}
 
 const formattedAnomalies = computed(() => {
   if (Array.isArray(props.anomalyContent)) {
@@ -166,10 +174,15 @@ function escapeRegex(text: string): string {
 <style scoped>
 .anomaly-result-dialog {
   margin: 10px;
-  padding: 15px;
-  background-color: var(--vscode-editor-background, #ffffff);
-  border-radius: 8px;
-  border: 1px solid rgba(128, 128, 128, 0.2);
+  padding: 10px;
+  color: var(--vscode-foreground, #616161);
+  background-color: rgba(128, 128, 128, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.1);
+}
+
+.anomaly-result-dialog:hover {
+  background-color: rgba(128, 128, 128, 0.1);
 }
 
 .dialog-header {
@@ -180,17 +193,18 @@ function escapeRegex(text: string): string {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--vscode-foreground, #333);
+  color: var(--vscode-foreground, #616161);
 }
 
 .anomaly-content {
   margin-bottom: 20px;
+  line-height: 1.6em;
 }
 
 .anomaly-item {
-  margin-bottom: 10px;
+  margin: 10px 5px;
   padding: 10px 12px;
-  background-color: var(--vscode-input-background, #f9f9f9);
+  background-color: rgba(128, 128, 128, 0.1);
   border-radius: 6px;
   border: 1px solid rgba(128, 128, 128, 0.2);
   display: flex;
@@ -198,18 +212,30 @@ function escapeRegex(text: string): string {
   gap: 10px;
 }
 
+.anomaly-item:hover {
+  background-color: rgba(128, 128, 128, 0.15);
+}
+
 .anomaly-index {
   font-weight: 600;
-  color: var(--vscode-foreground, #333);
-  font-size: 14px;
+  color: var(--vscode-foreground, #616161);
+  font-size: 13px;
   flex-shrink: 0;
-  min-width: 24px;
+  white-space: nowrap;
 }
 
 .anomaly-content-text {
+  flex: 1;
   white-space: pre-wrap;
-  word-break: break-all;
-  line-height: 1.5;
+  word-break: break-word;
+  line-height: 1.6em;
+  font-size: 13px;
+  font-family: var(--vscode-editor-font-family, 'Courier New', monospace);
+  color: var(--vscode-foreground, #616161);
+  background-color: rgba(128, 128, 128, 0.15);
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .log-content-section {
