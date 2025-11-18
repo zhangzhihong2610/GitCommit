@@ -55,7 +55,8 @@ export class RequestHandler {
         RequestHandler.handleFileUpload(
           message.fileName,
           message.content,
-          message.fileType // 现在传入的是 logType (BGL/HDFS/Liberty/Thunderbird)
+          message.fileType, // 现在传入的是 logType (BGL/HDFS/Liberty/Thunderbird)
+          message.customPrompt // 新增：可选的用户自定义提示词
         );
         break;
     }
@@ -64,7 +65,8 @@ export class RequestHandler {
   private static async handleFileUpload(
     fileName: string,
     content: number[] | Uint8Array,
-    logType: string // 现在传入的是日志类型：BGL/HDFS/Liberty/Thunderbird
+    logType: string, // 现在传入的是日志类型：BGL/HDFS/Liberty/Thunderbird
+    customPrompt?: string // 新增：用户自定义提示词
   ) {
     try {
       const buffer = Buffer.from(
@@ -156,7 +158,13 @@ export class RequestHandler {
                 .map((text: string, index: number) => `${index + 1}. ${text}`)
                 .join('\n');
 
-              const question = `我的日志类型为${logType}，请根据这些错误，按照严重以及需要修复的紧急程度来排序，给我它们的一个最佳解决方案。\n\n检测到的异常内容如下：\n${anomalyList}`;
+              // 新增：如果有用户自定义提示词则优先使用，否则使用内置提示语
+              const basePrompt =
+                (typeof customPrompt === "string" && customPrompt.trim().length > 0)
+                  ? customPrompt.trim()
+                  : `我的日志类型为${logType}，请根据这些错误，按照严重以及需要修复的紧急程度来排序，给我它们的一个最佳解决方案。`;
+
+              const question = `${basePrompt}\n\n检测到的异常内容如下：\n${anomalyList}`;
               RequestHandler.requestModel?.handleRequest(question, "[]");
             }
           } else {

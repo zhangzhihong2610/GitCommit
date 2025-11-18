@@ -60,14 +60,31 @@
             </div>
             
             <!-- 文件类型选择器 -->
-            <div class="file-type-selector" style="margin-bottom: 20px;">
+            <div class="file-type-selector">
               <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--vscode-foreground, #333);">选择日志类型：</label>
               <select v-model="selectedLogType" class="log-type-select">
                 <option value="BGL">BGL</option>
-                <option value="HDFS">HDFS</option>
+                <option value="HDFS_v1">HDFS_v1</option>
+                <option value="HDFS_v3">HDFS_v3</option>
                 <option value="Liberty">Liberty</option>
                 <option value="Thunderbird">Thunderbird</option>
+                <option value="Apache">Apache</option>
+                <option value="Linux">Linux</option>
+                <option value="OpenStack">OpenStack</option>
+                <option value="SSH">SSH</option>
+                <option value="Hadoop">Hadoop</option>
               </select>
+            </div>
+            
+            <!-- 自定义提示词输入框 -->
+            <div class="custom-prompt">
+              <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--vscode-foreground, #333);">自定义提示词（可选）：</label>
+              <input
+                type="text"
+                class="custom-prompt-input"
+                v-model="customPrompt"
+                placeholder="可选：我们有内置的提示词"
+              />
             </div>
 
             <div v-if="!uploadedFile" class="upload-area"
@@ -107,6 +124,16 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- 新增：等待日志解析的弹窗 -->
+    <Teleport to="body">
+      <div v-if="showWaitingPopup" class="waiting-overlay"></div>
+      <div v-if="showWaitingPopup" class="waiting-popup">
+        <div class="spinner"></div>
+        <p>{{ $t('input.parsingLog') }}</p>
+      </div>
+    </Teleport>
+
     <div v-for="(val, path) in contextMap" :key="path">
       <div class="selected-context" v-show="val.selected">
         <span @click="val.selected = !val.selected">{{ val.name }}</span>
@@ -116,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSenderStore } from '@/stores/sender'
 import { useListenerStore } from '@/stores/listener'
@@ -132,8 +159,10 @@ const dragDepth = ref(0)
 const uploadedFile = ref<{name: string, size: number, logType: string, content: Uint8Array} | null>(null)
 const selectedLogType = ref('BGL')
 const sending = ref(false)
+const customPrompt = ref('')
+const showWaitingPopup = ref(false)
 const listenerStore = useListenerStore()
-const { sendDisable, contextMap } = storeToRefs(listenerStore)
+const { sendDisable, contextMap, logParsingComplete } = storeToRefs(listenerStore)
 const sendStore = useSenderStore()
 const search = ref('')
 
@@ -287,26 +316,35 @@ function clearFile() {
 
 async function sendFile() {
   if (!uploadedFile.value || sending.value) return
-  
+
   sending.value = true
+  showWaitingPopup.value = true // <--- 显示等待弹窗
   try {
     // 发送文件到后端
     sendStore.fileUpload(
       uploadedFile.value.name,
       Array.from(uploadedFile.value.content) as unknown as any,
-      uploadedFile.value.logType
+      uploadedFile.value.logType,
+      customPrompt.value
     )
-    
+
     // 发送成功后清空文件并关闭弹窗
     uploadedFile.value = null
     showUpload.value = false
   } catch (error) {
     errorMsg.value = '发送失败，请重试'
-    setTimeout(() => { if(errorMsg.value) errorMsg.value = '' }, 3000)
+    showWaitingPopup.value = false // <--- 异常时隐藏弹窗
+    setTimeout(() => { if (errorMsg.value) errorMsg.value = '' }, 3000)
   } finally {
     sending.value = false
   }
 }
+
+watch(logParsingComplete, () => {
+  if (showWaitingPopup.value) {
+    showWaitingPopup.value = false
+  }
+})
 
 document.addEventListener('click', (e) => {
   if (displayContext.value) {
@@ -367,6 +405,53 @@ document.addEventListener('click', (e) => {
 .add-context:hover,
 .upload-log:hover {
   background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* 新增：等待弹窗样式 */
+.waiting-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1002;
+}
+
+.waiting-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--vscode-editor-background, #ffffff);
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1003;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.spinner {
+  border: 4px solid rgba(128, 128, 128, 0.2);
+  border-left-color: var(--vscode-button-background, #705697);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.waiting-popup p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--vscode-foreground, #333);
 }
 
 /* 模态框蒙层 */
@@ -490,13 +575,14 @@ document.addEventListener('click', (e) => {
 }
 
 .upload-modal-body .upload-area {
-  border: 2px dashed rgba(128, 128, 128, 0.4);
+  border: 1px dashed rgba(128, 128, 128, 0.4);
   border-radius: 8px;
   padding: 40px 20px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   -webkit-user-drag: none;
+  box-sizing: border-box;
 }
 
 .upload-modal-body .upload-area:hover {
@@ -505,7 +591,8 @@ document.addEventListener('click', (e) => {
 }
 
 .file-type-selector {
-  margin-bottom: 15px;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .log-type-select {
@@ -522,6 +609,33 @@ document.addEventListener('click', (e) => {
 .log-type-select:focus {
   outline: none;
   border-color: var(--vscode-button-hoverBackground, #5a4579);
+}
+
+.custom-prompt {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.custom-prompt-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background-color: var(--vscode-input-background, #ffffff);
+  color: var(--vscode-foreground, #333);
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-prompt-input:focus {
+  outline: none;
+  border-color: var(--vscode-button-hoverBackground, #5a4579);
+  box-shadow: 0 0 0 2px rgba(90, 69, 121, 0.15);
+}
+
+.upload-modal-body .upload-area {
+  width: 100%;
 }
 
 .file-item-row {

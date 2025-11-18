@@ -4,6 +4,7 @@ export default {
         searchConext: "Search Context",
         noContextInfo: "No context available. Please open the required text file in the editor and try again.",
         stopGeneration: "Stop Generation",
+        parsingLog: "Waiting for log analysis results...",
         addContext: "Add Context",
         textarea: "Enter content here...",
         selectModel: "Select Model",

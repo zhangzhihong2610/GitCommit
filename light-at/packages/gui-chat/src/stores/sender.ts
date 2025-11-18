@@ -63,12 +63,13 @@ export const useSenderStore = defineStore('sender', () => {
         });
     }
 
-    function fileUpload(fileName: string, content: number[] | Uint8Array, fileType: string){
+    function fileUpload(fileName: string, content: number[] | Uint8Array, fileType: string, customPrompt?: string){
         vscode?.postMessage({
             command: 'file.upload',
             fileName: fileName,
             content: content,
-            fileType: fileType
+            fileType: fileType,
+            customPrompt: customPrompt
         });
     }
 

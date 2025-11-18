@@ -4,6 +4,7 @@ export default {
         searchConext: "コンテキストを検索",
         noContextInfo: "コンテキストがありません。必要なテキストファイルをエディタで開いてからお試しください。",
         stopGeneration: "生成を停止",
+        parsingLog: "ログ解析結果を待っています...",
         addContext: "コンテキストを追加",
         textarea: "ここに入力内容を入力してください...",
         selectModel: "モデルを選択",
