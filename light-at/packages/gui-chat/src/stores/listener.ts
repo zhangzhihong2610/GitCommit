@@ -11,6 +11,7 @@ export const useListenerStore = defineStore('listener', () => {
     const welcomeInfo = ref(true);
     const sendShortcut = ref('Ctrl+Enter');
     const contextMap = ref<ContextMap>({});
+    const logParsingComplete = ref(0);
 
     window.addEventListener('message', event => {
         const message = event.data;
@@ -148,6 +149,7 @@ export const useListenerStore = defineStore('listener', () => {
             logContent: logContent,
             result: result
         });
+        logParsingComplete.value++;
     }
 
     return {
@@ -158,6 +160,7 @@ export const useListenerStore = defineStore('listener', () => {
         welcomeInfo,
         sendShortcut,
         contextMap,
+        logParsingComplete,
         anomalyResult
     };
 })
