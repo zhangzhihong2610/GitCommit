@@ -1,0 +1,182 @@
+{
+    "result": [
+        0,
+        1,
+        0,
+        1
+    ],
+    "anomaly_content": [
+        {
+            "row_index": 1,
+            "anomaly_position": 18,
+            "anomaly_content": "Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00589370 90990003 00000002 00000000) PSR0=00001f01 PSR1=00000000 PRXF=00000002 PIXF=00000007",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 39,
+            "anomaly_content": "rts: kernel terminated for reason 1004",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 47,
+            "anomaly_content": "rts: kernel terminated for reason 1004",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 48,
+            "anomaly_content": "Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00ce22e8 e6200003 00000002 00000000) PSR0=00001f01 PSR1=00000000 PRXF=00000002 PIXF=00000007",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 49,
+            "anomaly_content": "Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00ce22e8 e6200003 00000002 00000000) PSR0=20021f01 PSR1=00000000 PRXF=00000002 PIXF=00000007",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 56,
+            "anomaly_content": "rts: kernel terminated for reason 1004",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 57,
+            "anomaly_content": "Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=009756d5 8bfa0003 00000002 00000000) PSR0=20021f01 PSR1=00000000 PRXF=00000002 PIXF=00000007",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 67,
+            "anomaly_content": "Lustre mount FAILED : bglio78 : block_id : location",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 77,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41554, Connection timed out",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 78,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:52839, Connection reset by peer",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 80,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:52930, Connection reset by peer",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 82,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:53387, Connection reset by peer",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 83,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41060, Connection timed out",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 84,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41587, Connection reset by peer",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 87,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41534, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 89,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:54780, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 91,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:60243, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 1,
+            "anomaly_position": 94,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:47189, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 46,
+            "anomaly_content": "Lustre mount FAILED : bglio617 : block_id : location",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 72,
+            "anomaly_content": "ciod: LOGIN chdir(/p/gb1/stella/RAPTOR/2183) failed: Input/output error",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 73,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:55929, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 74,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:56170, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 80,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:49934, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        },
+        {
+            "row_index": 3,
+            "anomaly_position": 81,
+            "anomaly_content": "ciod: Error reading message prefix on CioStream socket to 172.16.96.116:50288, Link has been severed",
+            "content_length": 100,
+            "item_label_length": 100
+        }
+    ],
+    "log_content": [
+        "iar 001061e8 dear 0247015c ;-; iar 00106200 dear 0247016c ;-; iar 001061b4 dear 024701dc ;-; iar 001061e8 dear 0247015c ;-; iar 00106200 dear 0247019c ;-; iar 00105e84 dear 024701dc ;-; iar 00106200 dear 0247019c ;-; iar 001061e8 dear 0247015c ;-; iar 001061e8 dear 0247018c ;-; iar 001061e8 dear 0247015c ;-; iar 001061e8 dear 0247012c ;-; iar 001061b4 dear 0247017c ;-; iar 001061b4 dear 024701ac ;-; iar 001061b4 dear 0247017c ;-; iar 00106200 dear 0247019c ;-; iar 001061e8 dear 0247015c ;-; iar 001061b4 dear 0247017c ;-; 19220208 floating point alignment exceptions ;-; Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00589370 90990003 00000002 00000000) PSR0=00001f01 PSR1=00000000 PRXF=00000002 PIXF=00000007 ;-; program interrupt: privileged instruction...0 ;-; iar 00106ba0 dear 0246de3c ;-; iar 00106b98 dear 0246dd9c ;-; iar 00106c0c dear 0246de1c ;-; 5302707 floating point alignment exceptions ;-; iar 00106448 dear 0246dbbc ;-; iar 00106448 dear 0246db5c ;-; iar 00106448 dear 0246dbec ;-; CE sym 25, at 0x10e1bce0, mask 0x40 ;-; iar 00106288 dear 02f7a0fc ;-; iar 00113890 dear 0fee9c3c ;-; iar 00113898 dear 0fee9c4c ;-; iar 00113898 dear 0fee9c4c ;-; 5 torus receiver z+ input pipe error(s) (dcr 0x02f0) detected and corrected ;-; CE sym 9, at 0x12870760, mask 0x40 ;-; 3 L3 EDRAM error(s) (dcr 0x0157) detected and corrected ;-; CE sym 6, at 0x00e462c0, mask 0x02 ;-; CE sym 25, at 0x00e19cc0, mask 0x10 ;-; 2 ddr errors(s) detected and corrected on rank 0, symbol 4, bit 4 ;-; CE sym 15, at 0x1bb2fe80, mask 0x02 ;-; rts: kernel terminated for reason 1004 ;-; iar 00106274 dear 0246da8c ;-; iar 00106448 dear 0246dacc ;-; iar 00106298 dear 02f7a18c ;-; 488205 floating point alignment exceptions ;-; ciod: generated 128 core files for program /bgl/apps/followup/SPaSM_static/SPaSM_mpi.new_comp ;-; 1 ddr errors(s) detected and corrected on rank 0, symbol 8, bit 7 ;-; CE sym 25, at 0x12127ee0, mask 0x10 ;-; rts: kernel terminated for reason 1004 ;-; Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00ce22e8 e6200003 00000002 00000000) PSR0=00001f01 PSR1=00000000 PRXF=00000002 PIXF=00000007 ;-; Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=00ce22e8 e6200003 00000002 00000000) PSR0=20021f01 PSR1=00000000 PRXF=00000002 PIXF=00000007 ;-; critical input interrupt (unit=0x0b bit=0x0a): warning for torus z+ wire, suppressing further interrupts of same type ;-; ciod: generated 128 core files for program /bgl/apps/followup/SPaSM_static/SPaSM_mpi.rel2 ;-; ciod: generated 64 core files for program /bgl/apps/followup/hellow/a.out.1111 ;-; ciod: generated 64 core files for program /bgl/apps/followup/hellow/a.out.1111 ;-; Node card VPD check: U11 node in processor card slot J04 do not match. VPD ecid 04D58088CB2FFFFF08031C104CE9, found 04CA80D8012FFFFF08061A8094CB ;-; Node card VPD check: U11 node in processor card slot J10 do not match. VPD ecid 07570DD8002FFFFF09031B7090E2, found 04D480D8482FFFFF0A071BA052DE ;-; rts: kernel terminated for reason 1004 ;-; Error receiving packet on tree network, expecting type 57 instead of type 3 (softheader=009756d5 8bfa0003 00000002 00000000) PSR0=20021f01 PSR1=00000000 PRXF=00000002 PIXF=00000007 ;-; ciod: Error loading /bgl/apps/followup/SPaSM_static/SPaSM.460-1115: invalid or missing program image, Permission denied ;-; 18507114 torus sender z- retransmission error(s) (dcr 0x02f9) detected and corrected over 198 seconds ;-; 26741629 torus sender z- retransmission error(s) (dcr 0x02f9) detected and corrected over 268 seconds ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001b0 ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001b0 ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001b0 ;-; CE sym 28, at 0x1efc7020, mask 0x20 ;-; ciod: generated 128 core files for program /g/g90/glosli/src/ddcMD/ddcMD1.1.18a/bin/ddcMDbglV ;-; ciod: generated 128 core files for program /g/g90/glosli/src/ddcMD/ddcMD1.1.18a/bin/ddcMDbglV ;-; Lustre mount FAILED : bglio78 : block_id : location ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001b0 ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; MACHINE CHECK DCR read timeout (mc=e08x iar 0x00000000 lr 0xc00045a4) ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001b2 ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41554, Connection timed out ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:52839, Connection reset by peer ;-; ciod: Received signal 15, code=0, errno=0, address=0x0000044a ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:52930, Connection reset by peer ;-; ciod: Received signal 15, code=0, errno=0, address=0x0000044d ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:53387, Connection reset by peer ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41060, Connection timed out ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41587, Connection reset by peer ;-; CE sym 14, at 0x136cd5e0, mask 0x04 ;-; dbcr0=0x00000000 dbsr=0x00000000 ccr0=0x40002000 ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:41534, Link has been severed ;-; ciod: Received signal 15, code=0, errno=0, address=0x00001a12 ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:54780, Link has been severed ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f8 ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:60243, Link has been severed ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f5 ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f2 ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:47189, Link has been severed ;-; r24=0x0ffea4c8 r25=0x00000003 r26=0x0000000f r27=0xffffd000 ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f2 ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f5 ;-; 13 tree receiver 1 in re-synch state event(s) (dcr 0x0185) detected over 4562 seconds ;-; ciod: Received signal 15, code=0, errno=0, address=0x000001f2",
+        "10668 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10708 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10676 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10640 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10666 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10676 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10722 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 10684 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 10676 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 10714 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10712 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 10636 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10664 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10730 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10722 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 10722 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 10736 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 0 microseconds spent in the rbs signal handler during 0 calls. 0 microseconds was the maximum time for a single instance of a correctable ddr. ;-; 720 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; 720 total interrupts. 0 critical input interrupts. 0 microseconds total spent on critical input interrupts, 0 microseconds max time in a critical input interrupt. ;-; CE sym 27, at 0x00284720, mask 0x11 ;-; CE sym 9, at 0x0021d9c0, mask 0x20 ;-; CE sym 15, at 0x06a72120, mask 0x04 ;-; 1 ddr error(s) detected and corrected on rank 0, symbol 24 over 335 seconds ;-; PrepareForService shutting down Node card(mLctn(R10-M1-N2), mCardSernum(203231503833343000000000594c31304b34323934303257), mLp(FF:F2:9F:16:E0:DA:00:0D:60:E9:1F:25), mIp(10.1.1.164), mType(4)) as part of Service Action 648 ;-; Kernel detected 35591540 integer alignment exceptions (35591533) iar 0x0023f108, dear 0x1feaa260 (35591534) iar 0x00265564, dear 0x1feaa1c0 (35591535) iar 0x00265574, dear 0x1feaa1e0 (35591536) iar 0x00265578, dear 0x1feaa200 (35591537) iar 0x00265588, dear 0x1feaa220 (35591538) iar 0x0026558c, dear 0x1feaa240 (35591539) iar 0x00265594, dear 0x1feaa260 (35591540) iar 0x00265598, dear 0x1feaa280 ;-; 1 tree receiver 1 in re-synch state event(s) (dcr 0x0185) detected over 244 seconds ;-; CE sym 27, at 0x1b70b860, mask 0x80 ;-; CE sym 33, at 0x1ff2fc60, mask 0x04 ;-; CE sym 12, at 0x18e33e80, mask 0x04 ;-; CE sym 30, at 0x042358a0, mask 0x20 ;-; CE sym 11, at 0x06366640, mask 0x04 ;-; CE sym 19, at 0x057c7e00, mask 0x20 ;-; 159 ddr error(s) detected and corrected on rank 0, symbol 29 over 2486 seconds ;-; CE sym 29, at 0x0ea9fd60, mask 0x40 ;-; total of 1 ddr error(s) detected and corrected over 2487 seconds ;-; minus normalized number..................0 ;-; Lustre mount FAILED : bglio617 : block_id : location ;-; fraction rounded.........................0 ;-; Node card is not fully functional ;-; critical input interrupt (unit=0x0b bit=0x17): warning for tree C1 wire, suppressing further interrupts of same type ;-; size of scratchpad portion of L3.........0 (0M) ;-; Kernel detected 3830884 integer alignment exceptions (3830877) iar 0x00544ea8, dear 0x01fc1ba0 (3830878) iar 0x00544eb8, dear 0x01fc1bc0 (3830879) iar 0x00544ea8, dear 0x01fc1be0 (3830880) iar 0x00544eb8, dear 0x01fc1c00 (3830881) iar 0x00544ee0, dear 0x01fc1c20 (3830882) iar 0x00544ef0, dear 0x01fc1c40 (3830883) iar 0x00544ee0, dear 0x01fc1c60 (3830884) iar 0x00544ef0, dear 0x01fc1c80 ;-; Kernel detected 3853444 integer alignment exceptions (3853437) iar 0x00544ea8, dear 0x01ef5e20 (3853438) iar 0x00544eb8, dear 0x01ef5e40 (3853439) iar 0x00544ea8, dear 0x01ef5e60 (3853440) iar 0x00544eb8, dear 0x01ef5e80 (3853441) iar 0x00544ee0, dear 0x01ef5ea0 (3853442) iar 0x00544ef0, dear 0x01ef5ec0 (3853443) iar 0x00544ee0, dear 0x01ef5ee0 (3853444) iar 0x00544ef0, dear 0x01ef5f00 ;-; Kernel detected 3747792 integer alignment exceptions (3747785) iar 0x00544ea8, dear 0x01fc9220 (3747786) iar 0x00544eb8, dear 0x01fc9240 (3747787) iar 0x00544ea8, dear 0x01fc9260 (3747788) iar 0x00544eb8, dear 0x01fc9280 (3747789) iar 0x00544ee0, dear 0x01fc92a0 (3747790) iar 0x00544ef0, dear 0x01fc92c0 (3747791) iar 0x00544ee0, dear 0x01fc92e0 (3747792) iar 0x00544ef0, dear 0x01fc9300 ;-; Kernel detected 3946290 integer alignment exceptions (3946283) iar 0x00544ea8, dear 0x01ef6080 (3946284) iar 0x00544eb8, dear 0x01ef60a0 (3946285) iar 0x00544ea8, dear 0x01ef60c0 (3946286) iar 0x00544eb8, dear 0x01ef60e0 (3946287) iar 0x00544ee0, dear 0x01ef6100 (3946288) iar 0x00544ef0, dear 0x01ef6120 (3946289) iar 0x00544ee0, dear 0x01ef6140 (3946290) iar 0x00544ef0, dear 0x01ef6160 ;-; Kernel detected 4909176 integer alignment exceptions (4909169) iar 0x00544ea8, dear 0x01fc8a40 (4909170) iar 0x00544eb8, dear 0x01fc8a60 (4909171) iar 0x00544ea8, dear 0x01fc8a80 (4909172) iar 0x00544eb8, dear 0x01fc8aa0 (4909173) iar 0x00544ee0, dear 0x01fc8ac0 (4909174) iar 0x00544ef0, dear 0x01fc8ae0 (4909175) iar 0x00544ee0, dear 0x01fc8b00 (4909176) iar 0x00544ef0, dear 0x01fc8b20 ;-; Kernel detected 4898338 integer alignment exceptions (4898331) iar 0x00544ea8, dear 0x049e75e0 (4898332) iar 0x00544eb8, dear 0x049e7600 (4898333) iar 0x00544ea8, dear 0x049e7620 (4898334) iar 0x00544eb8, dear 0x049e7640 (4898335) iar 0x00544ee0, dear 0x049e7660 (4898336) iar 0x00544ef0, dear 0x049e7680 (4898337) iar 0x00544ee0, dear 0x049e76a0 (4898338) iar 0x00544ef0, dear 0x049e76c0 ;-; Kernel detected 3945740 integer alignment exceptions (3945733) iar 0x00544ea8, dear 0x01ef7960 (3945734) iar 0x00544eb8, dear 0x01ef7980 (3945735) iar 0x00544ea8, dear 0x01ef79a0 (3945736) iar 0x00544eb8, dear 0x01ef79c0 (3945737) iar 0x00544ee0, dear 0x01ef79e0 (3945738) iar 0x00544ef0, dear 0x01ef7a00 (3945739) iar 0x00544ee0, dear 0x01ef7a20 (3945740) iar 0x00544ef0, dear 0x01ef7a40 ;-; Kernel detected 3486044 integer alignment exceptions (3486037) iar 0x00544ea8, dear 0x01ef7c60 (3486038) iar 0x00544eb8, dear 0x01ef7c80 (3486039) iar 0x00544ea8, dear 0x01ef7ca0 (3486040) iar 0x00544eb8, dear 0x01ef7cc0 (3486041) iar 0x00544ee0, dear 0x01ef7ce0 (3486042) iar 0x00544ef0, dear 0x01ef7d00 (3486043) iar 0x00544ee0, dear 0x01ef7d20 (3486044) iar 0x00544ef0, dear 0x01ef7d40 ;-; ciod: Error loading /g/g90/glosli/src/ddcMD/ddcMD1.1.17/bin/ddcMDbglV: invalid or missing program image, No such file or directory ;-; ciod: Error loading /g/g90/glosli/src/ddcMD/ddcMD1.1.17/bin/ddcMDbglV: invalid or missing program image, No such file or directory ;-; 1 ddr error(s) detected and corrected on rank 0, symbol 9 over 986 seconds ;-; total of 5 ddr error(s) detected and corrected over 9108 seconds ;-; ciod: Error loading /p/gb1/stella/SPPM/1322/sppm_DD: invalid or missing program image, Permission denied ;-; ciod: Error loading /bgl/apps/SWL/stability/MDCASK/WORK/1383/inferno: invalid or missing program image, Permission denied ;-; ciod: Error loading /p/gb1/stella/UMT2K/1372/umt2k_DD: invalid or missing program image, Permission denied ;-; ciod: Error loading /bgl/apps/SWL/stability/NEWS05/news05_DD: invalid or missing program image, Permission denied ;-; ciod: Error loading /p/gb1/stella/UMT2K/1325/umt2k_DD: invalid or missing program image, Permission denied ;-; ciod: Error loading /p/gb1/stella/UMT2K/1369/umt2k_DD: invalid or missing program image, Permission denied ;-; ciod: Error loading /bgl/apps/SWL/stability/HPL/WORK/1498./hpl_DD: invalid or missing program image, No such file or directory ;-; ciod: Error loading /bgl/apps/SWL/stability/HPL/WORK/1501./hpl_DD: invalid or missing program image, No such file or directory ;-; 28 ddr error(s) detected and corrected on rank 0, symbol 21 over 11562 seconds ;-; ciod: LOGIN chdir(/p/gb1/stella/RAPTOR/2183) failed: Input/output error ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:55929, Link has been severed ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:56170, Link has been severed ;-; 2 ddr error(s) detected and corrected on rank 0, symbol 28 over 3365 seconds ;-; ciod: Error loading /g/g0/spelce1/Tuned/SPaSM-base/rundir/SPaSM.baseline: invalid or missing program image, Permission denied ;-; critical input interrupt (unit=0x0b bit=0x0a): warning for torus z+ wire, suppressing further interrupts of same type ;-; 2 ddr error(s) detected and corrected on rank 0, symbol 34 over 2738 seconds ;-; 5 ddr error(s) detected and corrected on rank 0, symbol 28 over 2946 seconds ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:49934, Link has been severed ;-; ciod: Error reading message prefix on CioStream socket to 172.16.96.116:50288, Link has been severed ;-; total of 20 ddr error(s) detected and corrected over 22070 seconds ;-; ciod: pollControlDescriptors: Detected the debugger died. ;-; 2 L3 EDRAM error(s) (dcr 0x0157) detected and corrected over 282 seconds ;-; total of 3 ddr error(s) detected and corrected over 8732 seconds ;-; ciod: pollControlDescriptors: Detected the debugger died. ;-; ciod: generated 128 core files for program /g/g24/germann2/SPaSM_static/SPaSM_mpi ;-; ciod: Error loading /g/g24/buber/Yunsic/BlueGene/partad.develf/taddriver.32.exe: program image too big, 361544528 > 266076160 ;-; fpr29=0xffffffff ffffffff ffffffff ffffffff ;-; Machine State Register: 0x0002f900 ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; instruction cache parity error corrected ;-; ciod: generated 128 core files for program /g/g24/germann2/SPaSM_mini/MEAM/r13"
+    ]
+}
