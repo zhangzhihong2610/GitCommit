@@ -99,6 +99,17 @@ export class RequestHandler {
             const anomalyContent = responseData.anomaly_content || {};
             const logContent = responseData.log_content || [];
 
+            // 检查 result 数组是否全为 0
+            const isAllZero = Array.isArray(result) && result.length > 0 && 
+              result.every((r: any) => r === 0 || r === '0');
+            
+            if (isAllZero) {
+              // 如果全为 0，提示用户无异常并通知前端关闭等待弹窗
+              vscode.window.showInformationMessage(`日志数据无异常`);
+              MessageSender.logNoAnomaly();
+              return; // 直接返回，不执行后续的异常处理逻辑
+            }
+
             // 格式化anomaly_content为数组格式
             let formattedAnomalies: any[] = [];
             if (Array.isArray(anomalyContent)) {

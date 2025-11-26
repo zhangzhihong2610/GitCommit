@@ -69,6 +69,9 @@ export const useListenerStore = defineStore('listener', () => {
             case 'anomaly.result':
                 anomalyResult(message.resultID, message.anomalyContent, message.logContent, message.result);
                 break;
+            case 'log.noAnomaly':
+                logNoAnomaly();
+                break;
         }
     });
 
@@ -149,6 +152,11 @@ export const useListenerStore = defineStore('listener', () => {
             logContent: logContent,
             result: result
         });
+        logParsingComplete.value++;
+    }
+
+    function logNoAnomaly(){
+        // 更新状态以触发前端关闭等待弹窗
         logParsingComplete.value++;
     }
 

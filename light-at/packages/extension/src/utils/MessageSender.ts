@@ -122,4 +122,10 @@ export class MessageSender{
           result: result
         });
     }
+
+    public static logNoAnomaly() {
+        MessageSender.view?.webview.postMessage({
+          command: 'log.noAnomaly'
+        });
+    }
 }
